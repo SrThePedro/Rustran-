@@ -1,5 +1,7 @@
-use crate::piece::{Color, Piece, PieceKind};
+use crate::piece::{self, Color, Piece, PieceKind};
 use std::fmt;
+
+use crate::square::Square;
 
 pub struct Board {
     squares: [[Option<Piece>; 8]; 8],
@@ -80,6 +82,21 @@ impl Board {
             );
         }
         board
+    }
+
+    pub fn make_move(&mut self, from: Square, to: Square) -> bool {
+        if from == to {
+            return false;
+        }
+
+        let piece = match self.get(from.file, from.rank) {
+            Some(p) => p,
+            None => return false,
+        };
+
+        self.set(to.file, to.rank, Some(piece));
+        self.set(from.file, from.rank, None);
+        true
     }
 }
 
